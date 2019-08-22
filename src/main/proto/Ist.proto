@@ -1,0 +1,73 @@
+// file content from http://wiki.iflytek.com/pages/viewpage.action?pageId=234808366
+
+// protobuf 3
+
+syntax = "proto3";
+
+package ist;
+option java_package = "com.iflytek.ist.sdk.core";
+
+// 请求参数
+message IstRequest {
+  map<string, string>  sessionParam=1; // 创建会话参数，只要求传一次，后续持续向服务端写音频时可以忽略（服务也不再解析）,详细说明见：sessionParam参数说明
+  bytes               samples=2; // 音频数据
+  string              samplesInfo=3; // 音频数据信息，扩展参数，保留
+  bool                endFlag=4;// 音频结束标记
+}
+
+// sessionParam可设置的参数如下：
+//      Key                   value                                         description
+//      sid                   string                                        会话id，这个参数一定要传，方便以后检索日志
+//      aue                   raw(pcm音频), speex, speex-wb, opus           音频编码格式，未传入默认speex-wb
+//      rst                   json,plain                                    返回结果的格式，未传入默认json
+//      rse                   utf8,gbk                                      转写结果的编码，未传入默认utf8
+//      eos                   [0~600000]                                    引擎参数，vad后断点值, 整数，毫秒，取值范围[0-60000]
+//      dwa                   wpgs                                          引擎参数，是否获取中间结果
+//      rate                  8k,16k                                        采样率，如果传入的不是16k，则按照16k重采样
+//      hotword               word1;word2;...                               采用;分割的热词，为utf-8编码
+
+// 识别结果
+message IstResult {
+  string      errStr=1; // 错误描述
+  int32       errCode=2; // 错误码
+  string      ansStr=3; // 结果
+  bool        endFlag=4; // 识别结束标记
+}
+
+//结果说明
+//{
+//        "seg_id":0                                                         //音频段
+//        "cn" :                                                                //音频段结果
+//        {
+//                "st":                                                          //音频段结果
+//                {
+//                        "bg":0                                               //音频段开始的帧数*10，也就是毫秒数
+//                        "ed":0                                               //音频段结束的帧数*10，也就是毫秒数，如果是PGS中间结果则为0
+//                        "type":0                                            //1表示PGS中间结果，0表示最终结果
+//                        "rt":                                                   / /返回结果
+//                        [{
+//                                "ws":                                         //句子
+//                                [{
+//                                        "wb":278,                         //句子开始位置，如果是PGS中间结果则为0
+//                                        "we":278,                         //句子结束位置，如果是PGS中间结果则为0
+//                                        "cw": //词语识别结果
+//                                        [{
+//                                                "sc":0.0, //句子置信度
+//                                                "w":"一个",
+//                                               "wb":278, //词语开始的帧数（注一帧10ms）,位置是相对vad结果中的bg
+//                                               "wc":0.0, //词语的置信度
+//                                               "we":299, //词语结束的帧数,位置是相对vad结果中的ed
+//                                               "wp":"n"                    //词语的属性，其中n表示正常词、s表示顺滑、p表示标点、g表示分段
+//                                       }]
+//                                }]
+//                        }]
+//                }
+//        }
+//}
+
+service Ist {
+  // 采用流的方式持续向服务端写音频数据，及持续从服务端获得结果
+  // 音频请求流,IstRequest.endFlag为true时代表写音频结束
+  // 结果返回流,IstResult.endFlang为true时代表会话识别结束
+  rpc createRec(stream IstRequest) returns (stream IstResult) { }
+}

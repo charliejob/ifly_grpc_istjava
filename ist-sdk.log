@@ -1,0 +1,6 @@
+2019-08-14 10:10:41,787 433  [main] INFO  com.iflytek.vcp.voice.engine.ist.client.IstClient - sid:3346f7ab48f441d89e6961e80c923875, start connect
+2019-08-14 10:10:42,114 760  [main] INFO  com.iflytek.vcp.voice.engine.ist.client.IstClient - sid:3346f7ab48f441d89e6961e80c923875, first transter session params
+2019-08-14 11:38:37,463 536  [main] INFO  com.iflytek.vcp.voice.engine.ist.client.IstClient - sid:aa12aba979ea45c7b3f6d560530e4d26, start connect
+2019-08-14 11:38:37,779 852  [main] INFO  com.iflytek.vcp.voice.engine.ist.client.IstClient - sid:aa12aba979ea45c7b3f6d560530e4d26, first transter session params
+2019-08-14 13:25:25,322 472  [main] INFO  com.iflytek.vcp.voice.engine.ist.client.IstClient - sid:4ea3ff44315e478fbe53411efee6cbb5, start connect
+2019-08-14 13:25:25,687 837  [main] INFO  com.iflytek.vcp.voice.engine.ist.client.IstClient - sid:4ea3ff44315e478fbe53411efee6cbb5, first transter session params
